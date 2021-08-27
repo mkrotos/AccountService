@@ -1,4 +1,4 @@
-package com.krotos.accountService.infrastructure.db
+package com.krotos.accountService.infrastructure.persistence
 
 import com.krotos.accountService.domain.Currency
 import java.math.BigDecimal
@@ -6,8 +6,6 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
 
@@ -18,7 +16,7 @@ const val INVALID_ID = -1L
 class AccountDTO {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = INVALID_ID
 
     @Column(name = "user_id", nullable = false)
