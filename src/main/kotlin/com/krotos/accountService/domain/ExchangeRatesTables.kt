@@ -1,6 +1,6 @@
 package com.krotos.accountService.domain
 
-import com.krotos.accountService.infrastructure.data.ExchangeRatesProvider
+import com.krotos.accountService.infrastructure.data.rates.ExchangeRatesProvider
 import com.krotos.accountService.infrastructure.persistence.ExchangeRatesRepository
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -56,7 +56,7 @@ class SingleCurrencyExchangeRateTable(
     fun to(targetCurrency: Currency): BigDecimal {
         val oldRate = exchangeRates[targetCurrency]
         val exchangeRate =
-            if (oldRate == null || oldRate.date.plusSeconds(refreshPeriodSeconds).isBefore(LocalDateTime.now())) {
+            if (oldRate == null || rateTooOld(oldRate)) {
                 getNewRateIfPossible(targetCurrency, oldRate)
             } else {
                 oldRate
@@ -64,17 +64,20 @@ class SingleCurrencyExchangeRateTable(
         return exchangeRate.averageRate
     }
 
+    private fun rateTooOld(oldRate: ExchangeRate) =
+        oldRate.date.plusSeconds(refreshPeriodSeconds).isBefore(LocalDateTime.now())
+
     private fun getNewRateIfPossible(targetCurrency: Currency, oldRate: ExchangeRate?): ExchangeRate {
         return try {
             updateRate(targetCurrency)
         } catch (ex: ProviderFailureException) {
             logger.warn("Couldn't fetch new rate for $currency -> $targetCurrency")
-            oldRate ?: throw ProviderFailureException(ex.message ?: "No message")
+            oldRate ?: throw ProviderFailureException(ex.message!!)
         }
     }
 
     private fun updateRate(targetCurrency: Currency): ExchangeRate { //not safe for concurrent
-        val newRate = exchangeRatesProvider.getRateFor(currency, targetCurrency)
+        val newRate = exchangeRatesProvider.getAverageRateFor(currency, targetCurrency)
         exchangeRates[targetCurrency] = newRate
         logger.info("Updated rate for $currency -> $targetCurrency = $newRate")
         exchangeRatesRepository.saveRate(newRate)
