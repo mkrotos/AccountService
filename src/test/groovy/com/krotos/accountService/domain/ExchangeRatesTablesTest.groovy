@@ -1,7 +1,7 @@
 package com.krotos.accountService.domain
 
 import com.krotos.accountService.infrastructure.external.rates.ExchangeRatesProvider
-import com.krotos.accountService.infrastructure.persistence.ExchangeRatesRepository
+import com.krotos.accountService.infrastructure.persistence.rates.ExchangeRatesRepository
 import spock.lang.Specification
 
 class ExchangeRatesTablesTest extends Specification {

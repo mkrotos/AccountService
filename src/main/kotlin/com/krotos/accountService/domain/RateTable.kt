@@ -1,14 +1,14 @@
 package com.krotos.accountService.domain
 
 import com.krotos.accountService.infrastructure.external.rates.ExchangeRatesProvider
-import com.krotos.accountService.infrastructure.persistence.ExchangeRatesRepository
+import com.krotos.accountService.infrastructure.persistence.rates.ExchangeRatesRepository
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-val logger: Logger = LoggerFactory.getLogger(RateTable::class.java)
+private val logger: Logger = LoggerFactory.getLogger(RateTable::class.java)
 
 class RateTable(
     private val currency: Currency,
@@ -28,6 +28,7 @@ class RateTable(
         val oldRate = exchangeRates[targetCurrency]
         val exchangeRate =
             if (oldRate == null || rateTooOld(oldRate)) {
+                logger.info("Trying to update old rate: $oldRate")
                 getNewRateIfPossible(targetCurrency, oldRate)
             } else {
                 oldRate

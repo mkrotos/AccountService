@@ -1,6 +1,6 @@
 package com.krotos.accountService.domain
 
-import com.krotos.accountService.infrastructure.persistence.AccountRepository
+import com.krotos.accountService.infrastructure.persistence.account.AccountRepository
 import java.math.BigDecimal
 import org.springframework.stereotype.Service
 

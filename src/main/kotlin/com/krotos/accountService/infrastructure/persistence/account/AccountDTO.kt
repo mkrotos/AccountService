@@ -1,5 +1,6 @@
-package com.krotos.accountService.infrastructure.persistence
+package com.krotos.accountService.infrastructure.persistence.account
 
+import com.krotos.accountService.domain.Account
 import com.krotos.accountService.domain.Currency
 import java.math.BigDecimal
 import javax.persistence.Column
@@ -27,6 +28,10 @@ class AccountDTO {
     @Column(name = "currency", nullable = false)
     @Enumerated(EnumType.STRING)
     var currency: Currency = Currency.UNDEF
+
+    fun toDomainEntity(): Account {
+        return Account(id, userId, balance, currency)
+    }
 
     override fun toString(): String {
         return "AccountDAO(id=$id, userId=$userId, balance=$balance, currency=$currency)"

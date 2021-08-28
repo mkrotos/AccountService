@@ -1,4 +1,4 @@
-package com.krotos.accountService.infrastructure.persistence
+package com.krotos.accountService.infrastructure.persistence.account
 
 import org.springframework.data.repository.Repository
 

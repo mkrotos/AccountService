@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-val logger: Logger = LoggerFactory.getLogger(AccountController::class.java)
+private val logger: Logger = LoggerFactory.getLogger(AccountController::class.java)
 
 @RestController
 @RequestMapping("/account")
