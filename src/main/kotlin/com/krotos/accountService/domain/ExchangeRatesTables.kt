@@ -13,11 +13,11 @@ class ExchangeRatesTables(
     @Value("\${exchangeRates.refreshPeriod.seconds}") private val refreshPeriodSeconds: Long
 ) {
 
-    private val rateTables = EnumMap<Currency, RateTable>(Currency::class.java)
+    private val rateTables = EnumMap<Currency, RatesTable>(Currency::class.java)
 
     init {
         validCurrencies().forEach {
-            rateTables[it] = RateTable(
+            rateTables[it] = RatesTable(
                 it,
                 exchangeRatesRepository,
                 exchangeRatesProvider,
@@ -26,7 +26,7 @@ class ExchangeRatesTables(
         }
     }
 
-    fun rateForConversionOf(currency: Currency): RateTable {
+    fun rateForConversionOf(currency: Currency): RatesTable {
         return rateTables[currency]!!
     }
 

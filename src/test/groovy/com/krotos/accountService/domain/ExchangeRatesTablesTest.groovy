@@ -13,10 +13,10 @@ class ExchangeRatesTablesTest extends Specification {
 
     def "should provide rate table for supported currency"(){
         when:
-        def rateTable = exchangeRatesTables.rateForConversionOf(Currency.PLN)
+        def ratesTable = exchangeRatesTables.rateForConversionOf(Currency.PLN)
 
         then:
-        rateTable instanceof RateTable
+        ratesTable instanceof RatesTable
     }
 
     def "should throw exception when getting table for undefined currency"(){

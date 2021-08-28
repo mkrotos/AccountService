@@ -12,12 +12,12 @@ class AccountServiceTest extends Specification {
     ExchangeRatesTables exchangeRatesTables = Mock()
     def accountService = new AccountService(accountRepository, exchangeRatesTables)
 
-    def "should return null when can't find user account"() {
+    def "should throw AccountNotFoundException when can't find user account"() {
         when:
-        def value = accountService.getUserAccountValueIn(Currency.USD, 111)
+        accountService.getUserAccountValueIn(Currency.USD, 111)
 
         then:
-        value == null
+        thrown(AccountNotFoundException)
     }
 
     def "should return account balance when request currency is equal account currency"() {
@@ -39,11 +39,11 @@ class AccountServiceTest extends Specification {
         def balance = BigDecimal.TEN
         def targetCurrency = Currency.USD
         def accountCurrency = Currency.PLN
-        def rateTable = mock(RateTable)
+        def ratesTable = mock(RatesTable)
 
         accountRepository.findAccount(userId) >> new Account(1L, userId, balance, accountCurrency)
-        exchangeRatesTables.rateForConversionOf(accountCurrency) >> rateTable
-        given(rateTable.to(targetCurrency)).willReturn(BigDecimal.valueOf(4.44))
+        exchangeRatesTables.rateForConversionOf(accountCurrency) >> ratesTable
+        given(ratesTable.to(targetCurrency)).willReturn(BigDecimal.valueOf(4.44))
 
         when:
         def value = accountService.getUserAccountValueIn(targetCurrency, userId)

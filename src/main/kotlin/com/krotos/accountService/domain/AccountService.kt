@@ -10,8 +10,9 @@ class AccountService(
     private val exchangeRatesTables: ExchangeRatesTables
 ) {
 
-    fun getUserAccountValueIn(targetCurrency: Currency, userId: Long): BigDecimal? {
-        val account = accountRepository.findAccount(userId) ?: return null
+    fun getUserAccountValueIn(targetCurrency: Currency, userId: Long): BigDecimal {
+        val account = accountRepository.findAccount(userId)
+            ?: throw AccountNotFoundException("Account not present in the repository")
 
         return if (account.currency == targetCurrency) {
             account.balance

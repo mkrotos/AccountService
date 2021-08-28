@@ -3,14 +3,13 @@ package com.krotos.accountService.domain
 import com.krotos.accountService.infrastructure.external.rates.ExchangeRatesProvider
 import com.krotos.accountService.infrastructure.persistence.rates.ExchangeRatesRepository
 import java.math.BigDecimal
-import java.time.LocalDateTime
 import java.util.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-private val logger: Logger = LoggerFactory.getLogger(RateTable::class.java)
+private val logger: Logger = LoggerFactory.getLogger(RatesTable::class.java)
 
-class RateTable(
+class RatesTable(
     private val currency: Currency,
     private val exchangeRatesRepository: ExchangeRatesRepository,
     private val exchangeRatesProvider: ExchangeRatesProvider,

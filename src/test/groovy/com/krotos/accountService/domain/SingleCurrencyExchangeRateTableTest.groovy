@@ -18,7 +18,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
     def "should return rate value taken from the repository"() {
         given:
         1 * repository.getLastRateFor(Currency.PLN, Currency.USD) >> new ExchangeRate(Currency.PLN, Currency.USD, OLD_RATE_VALUE, LocalDateTime.now())
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         def exchangeRate = rateTable.to(Currency.USD)
@@ -30,7 +30,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
     def "should take the value from the repository only once"() {
         given:
         1 * repository.getLastRateFor(Currency.PLN, Currency.USD) >> new ExchangeRate(Currency.PLN, Currency.USD, OLD_RATE_VALUE, LocalDateTime.now())
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         rateTable.to(Currency.USD)
@@ -44,7 +44,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
     def "should get and return value from the provider when it is not present in the repository"() {
         given:
         1 * provider.getAverageRateFor(Currency.PLN, Currency.USD) >> new ExchangeRate(Currency.PLN, Currency.USD, NEW_RATE_VALUE, LocalDateTime.now())
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         def exchangeRate = rateTable.to(Currency.USD)
@@ -57,7 +57,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
         given:
         repository.getLastRateFor(Currency.PLN, Currency.USD) >> new ExchangeRate(Currency.PLN, Currency.USD, OLD_RATE_VALUE, LocalDateTime.now().minusDays(1))
         1 * provider.getAverageRateFor(Currency.PLN, Currency.USD) >> new ExchangeRate(Currency.PLN, Currency.USD, NEW_RATE_VALUE, LocalDateTime.now())
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         def exchangeRate = rateTable.to(Currency.USD)
@@ -70,7 +70,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
         given:
         def newRate = new ExchangeRate(Currency.PLN, Currency.USD, NEW_RATE_VALUE, LocalDateTime.now())
         1 * provider.getAverageRateFor(Currency.PLN, Currency.USD) >> newRate
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         rateTable.to(Currency.USD)
@@ -84,7 +84,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
         given:
         repository.getLastRateFor(Currency.PLN, Currency.USD) >> new ExchangeRate(Currency.PLN, Currency.USD, OLD_RATE_VALUE, LocalDateTime.now().minusDays(1))
         1 * provider.getAverageRateFor(Currency.PLN, Currency.USD) >> { throw new ProviderFailureException("Provider failed") }
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         def exchangeRate = rateTable.to(Currency.USD)
@@ -98,7 +98,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
         def oldRate = new ExchangeRate(Currency.PLN, Currency.USD, OLD_RATE_VALUE, LocalDateTime.now().minusDays(1))
         def newRate = new ExchangeRate(Currency.PLN, Currency.USD, NEW_RATE_VALUE, LocalDateTime.now())
         2 * provider.getAverageRateFor(Currency.PLN, Currency.USD) >>> [oldRate, newRate]
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         def firstExchangeRate = rateTable.to(Currency.USD)
@@ -114,7 +114,7 @@ class SingleCurrencyExchangeRateTableTest extends Specification {
         given:
         repository.getLastRateFor(Currency.PLN, Currency.USD) >> null
         1 * provider.getAverageRateFor(Currency.PLN, Currency.USD) >> { throw new ProviderFailureException("Provider failed") }
-        def rateTable = new RateTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
+        def rateTable = new RatesTable(Currency.PLN, repository, provider, REFRESH_PERIOD_SECONDS)
 
         when:
         rateTable.to(Currency.USD)
