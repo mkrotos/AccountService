@@ -26,7 +26,7 @@ class NbpApiConsumer(
             responseBody?.rates?.get(0)?.mid
                 ?: throw ProviderFailureException("NBP api haven't provided mid rate for $targetCurrency, response is: \n$responseBody")
         } catch (ex: RuntimeException) {
-            throw ProviderFailureException("NBP api haven't responded before the timeout occurred (${timeoutDuration})")
+            throw ProviderFailureException("NBP api haven't responded before the timeout occurred (${timeoutSeconds}s)")
         }
     }
 

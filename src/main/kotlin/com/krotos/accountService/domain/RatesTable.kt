@@ -16,7 +16,7 @@ class RatesTable(
     private val refreshPeriodSeconds: Long
 ) {
 
-    private val exchangeRates = EnumMap<Currency, ExchangeRate>(Currency::class.java) // not safe for concurrent
+    private val exchangeRates = EnumMap<Currency, ExchangeRate>(Currency::class.java)
 
     init {
         validCurrencies()
@@ -25,31 +25,37 @@ class RatesTable(
     }
 
     fun to(targetCurrency: Currency): BigDecimal {
-        val oldRate = exchangeRates[targetCurrency]
+        val currentRate = exchangeRates[targetCurrency]
         val exchangeRate =
-            if (oldRate == null || oldRate.isTooOld(refreshPeriodSeconds)) {
-                logger.info("Trying to update old rate: $oldRate")
-                getNewRateIfPossible(targetCurrency, oldRate)
+            if (currentRate == null || currentRate.isTooOld(refreshPeriodSeconds)) {
+                logger.info("Trying to update old rate: $currentRate")
+                getNewRateIfPossible(targetCurrency, currentRate)
             } else {
-                oldRate
+                currentRate
             }
         return exchangeRate.averageRate
     }
 
     private fun getNewRateIfPossible(targetCurrency: Currency, oldRate: ExchangeRate?): ExchangeRate {
         return try {
-            updateRate(targetCurrency)
+            safeUpdateRate(targetCurrency)
         } catch (ex: ProviderFailureException) {
-            logger.warn("Couldn't fetch new rate for $currency -> $targetCurrency")
+            logger.warn("Couldn't fetch new rate for $currency -> $targetCurrency, exception message: ${ex.message}")
             oldRate ?: throw ProviderFailureException(ex.message!!)
         }
     }
 
-    private fun updateRate(targetCurrency: Currency): ExchangeRate { //not safe for concurrent
-        val newRate = exchangeRatesProvider.getAverageRateFor(currency, targetCurrency)
-        exchangeRates[targetCurrency] = newRate
-        logger.info("Updated rate for $currency -> $targetCurrency = $newRate")
-        exchangeRatesRepository.saveRate(newRate)
-        return newRate
+    private fun safeUpdateRate(targetCurrency: Currency): ExchangeRate {
+        val rate = synchronized(this) {
+            val currentRate = exchangeRates[targetCurrency]
+            if (currentRate != null && !currentRate.isTooOld(refreshPeriodSeconds)) return currentRate
+
+            val newRate = exchangeRatesProvider.getAverageRateFor(currency, targetCurrency)
+            exchangeRates[targetCurrency] = newRate
+            newRate
+        }
+        logger.info("Updated rate for $currency -> $targetCurrency = $rate")
+        exchangeRatesRepository.saveRate(rate)
+        return rate
     }
 }
