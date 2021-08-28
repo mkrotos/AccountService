@@ -1,4 +1,4 @@
-package com.krotos.accountService.infrastructure.data.rates.pln
+package com.krotos.accountService.infrastructure.external.rates.pln
 
 import com.krotos.accountService.domain.Currency
 import com.krotos.accountService.domain.ProviderFailureException

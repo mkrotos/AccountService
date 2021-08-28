@@ -11,9 +11,13 @@ class AccountService(
 ) {
 
     fun getUserAccountValueIn(targetCurrency: Currency, userId: Long): BigDecimal? {
-        return accountRepository.findAccount(userId)?.let { user ->
-            user.balance.multiply(
-                exchangeRatesTables.rateForConversionOf(user.currency).to(targetCurrency)
+        val account = accountRepository.findAccount(userId) ?: return null
+
+        return if (account.currency == targetCurrency) {
+            account.balance
+        } else {
+            account.balance.multiply(
+                exchangeRatesTables.rateForConversionOf(account.currency).to(targetCurrency)
             )
         }
     }

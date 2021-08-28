@@ -16,7 +16,6 @@ const val INVALID_ID = -1L
 class AccountDTO {
     @Id
     @Column(name = "id", nullable = false)
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = INVALID_ID
 
     @Column(name = "user_id", nullable = false)

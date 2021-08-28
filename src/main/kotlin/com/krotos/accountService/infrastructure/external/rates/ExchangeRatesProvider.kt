@@ -1,9 +1,9 @@
-package com.krotos.accountService.infrastructure.data.rates
+package com.krotos.accountService.infrastructure.external.rates
 
 import com.krotos.accountService.domain.ConversionUnavailableException
 import com.krotos.accountService.domain.Currency
 import com.krotos.accountService.domain.ExchangeRate
-import com.krotos.accountService.infrastructure.data.rates.pln.PlnExchangeRateProvider
+import com.krotos.accountService.infrastructure.external.rates.pln.PlnExchangeRateProvider
 import java.util.*
 import org.springframework.stereotype.Service
 

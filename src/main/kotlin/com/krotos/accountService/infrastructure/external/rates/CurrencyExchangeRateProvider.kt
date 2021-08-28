@@ -1,4 +1,4 @@
-package com.krotos.accountService.infrastructure.data.rates
+package com.krotos.accountService.infrastructure.external.rates
 
 import com.krotos.accountService.domain.Currency
 import com.krotos.accountService.domain.ExchangeRate
