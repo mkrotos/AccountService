@@ -12,10 +12,13 @@ import org.springframework.web.reactive.function.client.bodyToMono
 private const val MID_RATES_TABLE = "a"
 
 @Component
-class NbpApiConsumer(@Value("\${infrastructure.rates.pln.nbp.url}") private val url: String) {
+class NbpApiConsumer(
+    @Value("\${infrastructure.rates.pln.nbp.url}") private val url: String,
+    @Value("\${infrastructure.rates.pln.nbp.timeout.seconds}") private val timeoutSeconds: Long,
+) {
 
     private val webClient = WebClient.create(url)
-    private val timeoutDuration = Duration.ofSeconds(10)
+    private val timeoutDuration = Duration.ofSeconds(timeoutSeconds)
 
     fun fetchCurrentRateFor(targetCurrency: Currency): BigDecimal {
         return try {
@@ -37,12 +40,3 @@ class NbpApiConsumer(@Value("\${infrastructure.rates.pln.nbp.url}") private val 
     }
 
 }
-
-data class NbpExchangeRatesDTO(
-    val table: String?,
-    val currency: String?,
-    val code: String,
-    val rates: List<NbpRateRecord>
-)
-
-data class NbpRateRecord(val no: String, val effectiveDate: String, val mid: BigDecimal)

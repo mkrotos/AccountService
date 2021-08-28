@@ -21,7 +21,7 @@ class ExchangeRatesTablesTest extends Specification {
 
     def "should throw exception when getting table for undefined currency"(){
         when:
-        def rateTable = exchangeRatesTables.rateForConversionOf(Currency.UNDEF)
+        exchangeRatesTables.rateForConversionOf(Currency.UNDEF)
 
         then:
         thrown(NullPointerException)

@@ -16,7 +16,7 @@ class ExchangeRatesTables(
     private val rateTables = EnumMap<Currency, RateTable>(Currency::class.java)
 
     init {
-        Currency.values().filter { it != Currency.UNDEF }.forEach {
+        validCurrencies().forEach {
             rateTables[it] = RateTable(
                 it,
                 exchangeRatesRepository,

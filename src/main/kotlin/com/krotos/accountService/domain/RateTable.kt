@@ -20,14 +20,15 @@ class RateTable(
     private val exchangeRates = EnumMap<Currency, ExchangeRate>(Currency::class.java) // not safe for concurrent
 
     init {
-        Currency.values().filter { it != Currency.UNDEF && it != currency }
+        validCurrencies()
+            .filter { it != currency }
             .forEach { exchangeRates[it] = exchangeRatesRepository.getLastRateFor(currency, it) }
     }
 
     fun to(targetCurrency: Currency): BigDecimal {
         val oldRate = exchangeRates[targetCurrency]
         val exchangeRate =
-            if (oldRate == null || rateTooOld(oldRate)) {
+            if (oldRate == null || oldRate.isTooOld(refreshPeriodSeconds)) {
                 logger.info("Trying to update old rate: $oldRate")
                 getNewRateIfPossible(targetCurrency, oldRate)
             } else {
@@ -35,9 +36,6 @@ class RateTable(
             }
         return exchangeRate.averageRate
     }
-
-    private fun rateTooOld(oldRate: ExchangeRate) =
-        oldRate.date.plusSeconds(refreshPeriodSeconds).isBefore(LocalDateTime.now())
 
     private fun getNewRateIfPossible(targetCurrency: Currency, oldRate: ExchangeRate?): ExchangeRate {
         return try {

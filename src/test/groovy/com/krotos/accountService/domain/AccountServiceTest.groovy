@@ -12,11 +12,6 @@ class AccountServiceTest extends Specification {
     ExchangeRatesTables exchangeRatesTables = Mock()
     def accountService = new AccountService(accountRepository, exchangeRatesTables)
 
-    def "one plus one"() {
-        expect:
-        1 + 1 == 2
-    }
-
     def "should return null when can't find user account"() {
         when:
         def value = accountService.getUserAccountValueIn(Currency.USD, 111)
