@@ -3,12 +3,16 @@ package com.krotos.accountService.domain
 import com.krotos.accountService.infrastructure.external.rates.ExchangeRatesProvider
 import com.krotos.accountService.infrastructure.persistence.rates.ExchangeRatesRepository
 import spock.lang.Specification
+import spock.lang.Subject
 
-class ExchangeRatesTablesTest extends Specification {
+class ExchangeRatesTablesProviderTest extends Specification {
 
     public static final long REFRESH_PERIOD = 100L
+
     ExchangeRatesRepository repository = Mock()
     ExchangeRatesProvider provider = Mock()
+
+    @Subject
     def exchangeRatesTables = new ExchangeRatesTablesProvider(repository, provider, REFRESH_PERIOD)
 
     def "should provide rate table for supported currency"(){

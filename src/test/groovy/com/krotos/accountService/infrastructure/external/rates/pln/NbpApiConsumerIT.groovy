@@ -1,16 +1,20 @@
 package com.krotos.accountService.infrastructure.external.rates.pln
 
-
+import com.krotos.accountService.TestData
 import com.krotos.accountService.domain.Currency
 import com.krotos.accountService.domain.ProviderFailureException
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import spock.lang.Specification
+import spock.lang.Subject
+
+import java.util.concurrent.TimeUnit
 
 class NbpApiConsumerIT extends Specification {
 
     private static MockWebServer mockWebServer
-    public static final String testDataDirectory = "src/test/resources/testData"
+
+    @Subject
     private NbpApiConsumer nbpApi
 
     def setupSpec() {
@@ -19,7 +23,7 @@ class NbpApiConsumerIT extends Specification {
     }
 
     def setup() {
-        def url = String.format("http://localhost:%s/api", mockWebServer.getPort())
+        def url = String.format("http://localhost:%s", mockWebServer.getPort())
         nbpApi = new NbpApiConsumer(url, 10)
     }
 
@@ -27,21 +31,20 @@ class NbpApiConsumerIT extends Specification {
         mockWebServer.shutdown()
     }
 
-    def nbpValidResponse = new File(testDataDirectory + "/nbpValidResponse.json").text
-    def nbpInvalidResponse = new File(testDataDirectory + "/nbpInvalidResponse.json").text
-
     def "should call nbp api and return current exchange rate value"() {
         given:
         mockWebServer.enqueue(new MockResponse()
                 .setStatus("HTTP/1.1 200 OK")
-                .setBody(nbpValidResponse)
+                .setBody(TestData.getValidNbpResponse())
                 .addHeader("Content-Type", "application/json"))
 
         when:
         def rateValue = nbpApi.fetchAverageRateFor(Currency.USD)
+        def requestPath = mockWebServer.takeRequest(1, TimeUnit.SECONDS).path
 
         then:
-        rateValue == BigDecimal.valueOf(3.8978)
+        rateValue == TestData.nbpResponseMidValue
+        requestPath == "/exchangerates/rates/a/usd/"
     }
 
     def "should throw ProviderFailureException on response status 4**"() {
@@ -80,12 +83,11 @@ class NbpApiConsumerIT extends Specification {
         ex.message.contains("Timeout on blocking read for 0 NANOSECONDS")
     }
 
-
     def "should throw ProviderFailureException on invalid response"() {
         given:
         mockWebServer.enqueue(new MockResponse()
                 .setStatus("HTTP/1.1 200 OK")
-                .setBody(nbpInvalidResponse)
+                .setBody(TestData.getInvalidNbpResponse())
                 .addHeader("Content-Type", "application/json"))
 
         when:

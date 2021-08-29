@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/account")
-class AccountController(val accountService: AccountService) {
+class AccountController(private val accountService: AccountService) {
 
-    @GetMapping
+    @GetMapping("/usd")
     fun getUsdBalance(@RequestParam(name = "userId") userId: Long): String {
-        return accountService.getUserAccountValueIn(Currency.USD, userId)
+        return accountService
+            .getUserAccountValueIn(Currency.USD, userId)
             .setScale(4, RoundingMode.HALF_UP)
             .toPlainString()
     }

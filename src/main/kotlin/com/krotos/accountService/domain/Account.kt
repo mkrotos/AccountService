@@ -2,7 +2,7 @@ package com.krotos.accountService.domain
 
 import java.math.BigDecimal
 
-class Account(
+data class Account(
     val id: Long,
     val userId: Long,
     val balance: BigDecimal,

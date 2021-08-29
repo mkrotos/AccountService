@@ -9,7 +9,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class RatesTableTest extends Specification {
+class ExchangeRatesTableTest extends Specification {
 
     private static final BigDecimal OLD_RATE_VALUE = BigDecimal.valueOf(4.44)
     private static final BigDecimal NEW_RATE_VALUE = BigDecimal.valueOf(8.44)

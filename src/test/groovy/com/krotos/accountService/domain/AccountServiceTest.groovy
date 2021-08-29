@@ -2,6 +2,7 @@ package com.krotos.accountService.domain
 
 import com.krotos.accountService.infrastructure.persistence.account.AccountRepository
 import spock.lang.Specification
+import spock.lang.Subject
 
 import static org.mockito.BDDMockito.given
 import static org.mockito.Mockito.mock
@@ -10,6 +11,8 @@ class AccountServiceTest extends Specification {
 
     AccountRepository accountRepository = Mock()
     ExchangeRatesTablesProvider exchangeRatesTables = Mock()
+
+    @Subject
     def accountService = new AccountService(accountRepository, exchangeRatesTables)
 
     def "should throw AccountNotFoundException when can't find user account"() {
