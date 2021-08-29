@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class PlnExchangeRateProvider(private val nbpApiConsumer: NbpApiConsumer) : CurrencyExchangeRateProvider {
     override fun fetchCurrentAverageRateFor(targetCurrency: Currency): ExchangeRate {
-        val currentRate = nbpApiConsumer.fetchCurrentRateFor(targetCurrency)
+        val currentRate = nbpApiConsumer.fetchAverageRateFor(targetCurrency)
         return ExchangeRate(Currency.PLN, targetCurrency, currentRate, LocalDateTime.now())
     }
 

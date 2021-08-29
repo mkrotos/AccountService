@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class ExchangeRatesTables(
+class ExchangeRatesTablesProvider(
     private val exchangeRatesRepository: ExchangeRatesRepository,
     private val exchangeRatesProvider: ExchangeRatesProvider,
     @Value("\${exchangeRates.refreshPeriod.seconds}") private val refreshPeriodSeconds: Long

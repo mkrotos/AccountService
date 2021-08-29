@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock
 class AccountServiceTest extends Specification {
 
     AccountRepository accountRepository = Mock()
-    ExchangeRatesTables exchangeRatesTables = Mock()
+    ExchangeRatesTablesProvider exchangeRatesTables = Mock()
     def accountService = new AccountService(accountRepository, exchangeRatesTables)
 
     def "should throw AccountNotFoundException when can't find user account"() {

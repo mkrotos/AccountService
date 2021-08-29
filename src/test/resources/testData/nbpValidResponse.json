@@ -1,0 +1,12 @@
+{
+    "table": "A",
+    "currency": "dolar amerykański",
+    "code": "USD",
+    "rates": [
+        {
+            "no": "166/A/NBP/2021",
+            "effectiveDate": "2021-08-27",
+            "mid": 3.8978
+        }
+    ]
+}

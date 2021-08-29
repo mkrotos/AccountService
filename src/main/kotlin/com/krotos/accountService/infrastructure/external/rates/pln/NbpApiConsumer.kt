@@ -20,21 +20,27 @@ class NbpApiConsumer(
     private val webClient = WebClient.create(url)
     private val timeoutDuration = Duration.ofSeconds(timeoutSeconds)
 
-    fun fetchCurrentRateFor(targetCurrency: Currency): BigDecimal {
+    fun fetchAverageRateFor(targetCurrency: Currency): BigDecimal {
+        val responseBody = safeCallApi(targetCurrency, MID_RATES_TABLE)
+        return responseBody?.rates?.get(0)?.mid
+            ?: throw ProviderFailureException("NBP api haven't provided mid rate for $targetCurrency, response is: \n$responseBody")
+    }
+
+    private fun safeCallApi(targetCurrency: Currency, table: String): NbpExchangeRatesDTO? {
         return try {
-            val responseBody = callApiForCurrentRate(targetCurrency)
-            responseBody?.rates?.get(0)?.mid
-                ?: throw ProviderFailureException("NBP api haven't provided mid rate for $targetCurrency, response is: \n$responseBody")
-        } catch (ex: RuntimeException) {
-            throw ProviderFailureException("NBP api haven't responded before the timeout occurred (${timeoutSeconds}s)")
+            callApi(targetCurrency, table)
+        } catch (ex: Exception) {
+            throw ProviderFailureException(ex.message ?: "No message")
         }
     }
 
-    private fun callApiForCurrentRate(targetCurrency: Currency): NbpExchangeRatesDTO? {
-        return webClient.get().uri("/exchangerates/rates/$MID_RATES_TABLE/${targetCurrency.code}/")
+    private fun callApi(targetCurrency: Currency, table: String): NbpExchangeRatesDTO? {
+        return webClient
+            .get()
+            .uri("/exchangerates/rates/$table/${targetCurrency.code}/")
             .retrieve()
             .onStatus({ status -> status.isError },
-                { throw ProviderFailureException("NBP returned error code: ${it.statusCode()}, \nreason: ${it.statusCode().reasonPhrase}") })
+                { throw ProviderFailureException("NBP returned error code: ${it.statusCode()}, reason: ${it.statusCode().reasonPhrase}") })
             .bodyToMono<NbpExchangeRatesDTO>()
             .block(timeoutDuration)
     }

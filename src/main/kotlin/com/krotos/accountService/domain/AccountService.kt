@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val exchangeRatesTables: ExchangeRatesTables
+    private val exchangeRatesTables: ExchangeRatesTablesProvider
 ) {
 
     fun getUserAccountValueIn(targetCurrency: Currency, userId: Long): BigDecimal {
