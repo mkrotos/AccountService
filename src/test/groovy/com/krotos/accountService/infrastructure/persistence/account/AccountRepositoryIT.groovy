@@ -1,8 +1,6 @@
 package com.krotos.accountService.infrastructure.persistence.account
 
 import com.krotos.accountService.TestData
-import com.krotos.accountService.domain.Account
-import com.krotos.accountService.domain.Currency
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification

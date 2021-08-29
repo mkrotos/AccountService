@@ -2,13 +2,10 @@ package com.krotos.accountService.infrastructure.persistence.rates
 
 import com.krotos.accountService.TestData
 import com.krotos.accountService.domain.Currency
-import com.krotos.accountService.domain.ExchangeRate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 import spock.lang.Subject
-
-import java.time.LocalDateTime
 
 @SpringBootTest
 class ExchangeRatesRepositoryIT extends Specification {

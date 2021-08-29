@@ -14,7 +14,7 @@ import javax.persistence.Table
 const val INVALID_ID = -1L
 
 
-fun fromDomainEntity(exchangeRate: ExchangeRate): ExchangeRateDTO {
+fun toDTO(exchangeRate: ExchangeRate): ExchangeRateDTO {
     val dto = ExchangeRateDTO()
     dto.baseCurrency = exchangeRate.baseCurrency
     dto.targetCurrency = exchangeRate.targetCurrency

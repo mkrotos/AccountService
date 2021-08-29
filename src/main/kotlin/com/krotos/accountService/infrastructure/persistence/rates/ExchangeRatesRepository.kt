@@ -19,7 +19,7 @@ class ExchangeRatesRepository(private val jpaRepository: ExchangeRatesJPAReposit
 
     fun saveRate(newRate: ExchangeRate) {
         logger.info("Saving new exchange rate: $newRate")
-        jpaRepository.save(fromDomainEntity(newRate))
+        jpaRepository.save(toDTO(newRate))
     }
 
 }

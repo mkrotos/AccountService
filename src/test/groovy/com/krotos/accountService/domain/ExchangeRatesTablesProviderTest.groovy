@@ -7,7 +7,7 @@ import spock.lang.Subject
 
 class ExchangeRatesTablesProviderTest extends Specification {
 
-    public static final long REFRESH_PERIOD = 100L
+    static final long REFRESH_PERIOD = 100L
 
     ExchangeRatesRepository repository = Mock()
     ExchangeRatesProvider provider = Mock()
